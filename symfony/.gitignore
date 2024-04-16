@@ -1,0 +1,13 @@
+/.idea/
+/.phpunit.cache/
+/docker/
+/report/
+/var/
+/vendor/
+/.env.local
+/.env.local.php
+/.env.*.local
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+/composer.lock
+/symfony.lock
