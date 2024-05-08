@@ -7,6 +7,7 @@ namespace Tests\App\User\Application\Command\CreateUser;
 use App\User\Application\Command\CreateUser\CreateUserCommand;
 use App\User\Domain\Event\UserWasCreated;
 use Shared\Domain\Email;
+use Shared\Domain\HashedPassword;
 use Shared\Domain\Uuid;
 use Tests\App\AbstractApplicationTest;
 use Tests\App\EventCollectorListener;
@@ -21,7 +22,7 @@ final class CreateUserHandlerTest extends AbstractApplicationTest
         $command = new CreateUserCommand(
             new Uuid('7ea24ad8-2d4b-46c5-8d2e-03b34ab420c3'),
             new Email('johndoe@email.com'),
-            'password'
+            HashedPassword::encode('password'),
         );
 
         $this->handle($command);

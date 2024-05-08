@@ -22,7 +22,7 @@ final readonly class CreateUserHandler implements CommandHandlerInterface
         $user = User::create(
             $command->id,
             $command->email,
-            $command->plainPassword,
+            $command->password,
             $this->uniqueEmailSpecification
         );
 

@@ -10,6 +10,7 @@ use App\User\Domain\Exception\AuthenticationUserException;
 use App\User\Domain\Exception\UserEmailAlreadyExistsException;
 use App\User\Domain\Exception\UserNotFoundException;
 use Shared\Domain\Email;
+use Shared\Domain\HashedPassword;
 use Shared\Domain\Uuid;
 use SharedBundle\UI\Http\Rest\Controller\AbstractCommandController;
 use SharedBundle\UI\Http\Rest\Request\CommandRequester;
@@ -19,8 +20,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use UI\Http\Rest\Request\Auth\ChangeUserEmailRequest;
-use UI\Http\Rest\Request\Auth\ChangeUserPasswordRequest;
+use UI\Http\Rest\Request\ChangeUserEmailRequest;
+use UI\Http\Rest\Request\ChangeUserPasswordRequest;
 
 final readonly class PatchUsersMeController extends AbstractCommandController
 {
@@ -38,7 +39,7 @@ final readonly class PatchUsersMeController extends AbstractCommandController
                 fn (string $email) => $this->handle(new ChangeUserEmailCommand(new Uuid($id), new Email($email)))
             ),
             new ChangeUserPasswordRequest(
-                fn (string $oldPlainPassword, string $plainPassword) => $this->handle(new ChangeUserPasswordCommand(new Uuid($id), $oldPlainPassword, $plainPassword))
+                fn (string $oldPlainPassword, string $plainPassword) => $this->handle(new ChangeUserPasswordCommand(new Uuid($id), $oldPlainPassword, HashedPassword::encode($plainPassword)))
             )
         );
 

@@ -10,6 +10,7 @@ use App\User\Domain\Specification\UniqueEmailSpecificationInterface;
 use App\User\Domain\User;
 use PHPUnit\Framework\TestCase;
 use Shared\Domain\Email;
+use Shared\Domain\HashedPassword;
 use Shared\Domain\Uuid;
 
 final class UserTest extends TestCase implements UniqueEmailSpecificationInterface
@@ -28,7 +29,7 @@ final class UserTest extends TestCase implements UniqueEmailSpecificationInterfa
         User::create(
             new Uuid('7ea24ad8-2d4b-46c5-8d2e-03b34ab420c3'),
             new Email('johndoe@email.com'),
-            'password',
+            HashedPassword::encode('password'),
             $this
         );
     }
@@ -41,7 +42,7 @@ final class UserTest extends TestCase implements UniqueEmailSpecificationInterfa
         $user = User::create(
             new Uuid('7ea24ad8-2d4b-46c5-8d2e-03b34ab420c3'),
             new Email('johndoe@email.com'),
-            'password',
+            HashedPassword::encode('password'),
             $this
         );
 

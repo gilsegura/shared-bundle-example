@@ -24,10 +24,10 @@ final readonly class UserWasCreated implements DomainEventInterface
     #[\Override]
     public static function deserialize(array $data): self
     {
-        Assertion::keyExists($data, 'id');
-        Assertion::keyExists($data, 'email');
-        Assertion::keyExists($data, 'password');
-        Assertion::keyExists($data, 'created_at');
+        Assertion::cryptExists($data, 'id');
+        Assertion::cryptExists($data, 'email');
+        Assertion::cryptExists($data, 'password');
+        Assertion::cryptExists($data, 'created_at');
 
         return new self(
             new Uuid($data['id']),

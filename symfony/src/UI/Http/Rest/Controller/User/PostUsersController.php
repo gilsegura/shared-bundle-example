@@ -8,6 +8,7 @@ use App\User\Application\Command\CreateUser\CreateUserCommand;
 use App\User\Domain\Exception\UserEmailAlreadyExistsException;
 use Assert\Assertion;
 use Shared\Domain\Email;
+use Shared\Domain\HashedPassword;
 use Shared\Domain\Uuid;
 use SharedBundle\UI\Http\Rest\Controller\AbstractCommandController;
 use SharedBundle\UI\Http\Rest\Request\Input;
@@ -39,7 +40,7 @@ final readonly class PostUsersController extends AbstractCommandController
         $this->handle(new CreateUserCommand(
             new Uuid($id),
             new Email($email),
-            $plainPassword
+            HashedPassword::encode($plainPassword)
         ));
 
         return OpenApi::created();

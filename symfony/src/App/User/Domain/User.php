@@ -34,8 +34,8 @@ final class User extends AbstractEventSourcedAggregateRoot
     public static function create(
         Uuid $id,
         Email $email,
-        string $plainPassword,
-        UniqueEmailSpecificationInterface $uniqueEmailSpecification
+        HashedPassword $password,
+        UniqueEmailSpecificationInterface $uniqueEmailSpecification,
     ): self {
         $uniqueEmailSpecification->isUnique($email);
 
@@ -44,7 +44,7 @@ final class User extends AbstractEventSourcedAggregateRoot
         $user->apply(new UserWasCreated(
             $id,
             $email,
-            HashedPassword::encode($plainPassword),
+            $password,
             DateTimeImmutable::now()
         ));
 
@@ -88,7 +88,7 @@ final class User extends AbstractEventSourcedAggregateRoot
     /**
      * @throws AuthenticationUserException
      */
-    public function changePassword(string $oldPlainPassword, string $plainPassword): void
+    public function changePassword(string $oldPlainPassword, HashedPassword $password): void
     {
         if (!$this->password->match($oldPlainPassword)) {
             throw AuthenticationUserException::new($this->id);
@@ -96,7 +96,7 @@ final class User extends AbstractEventSourcedAggregateRoot
 
         $this->apply(new UserPasswordWasChanged(
             $this->id,
-            HashedPassword::encode($plainPassword),
+            $password,
             DateTimeImmutable::now()
         ));
     }
@@ -111,25 +111,5 @@ final class User extends AbstractEventSourcedAggregateRoot
     public function id(): Uuid
     {
         return $this->id;
-    }
-
-    public function email(): Email
-    {
-        return $this->email;
-    }
-
-    public function password(): HashedPassword
-    {
-        return $this->password;
-    }
-
-    public function createdAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function updatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 }

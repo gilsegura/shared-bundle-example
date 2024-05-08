@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Shared\Criteria;
 use Shared\Domain\Uuid;
 use Shared\ReadModel\ReadModelRepositoryException;
-use SharedBundle\Criteria\CriteriaConverterException;
 use SharedBundle\Persistence\Doctrine\AbstractObjectManager;
 
 final readonly class UserReadModelRepository extends AbstractObjectManager implements UserReadModelRepositoryInterface
@@ -22,10 +21,6 @@ final readonly class UserReadModelRepository extends AbstractObjectManager imple
         parent::__construct($manager, $manager->getRepository(UserView::class));
     }
 
-    /**
-     * @throws UserNotFoundException
-     * @throws CriteriaConverterException
-     */
     #[\Override]
     public function oneOrException(Uuid $id): UserView
     {
@@ -38,11 +33,6 @@ final readonly class UserReadModelRepository extends AbstractObjectManager imple
         return $users[0];
     }
 
-    /**
-     * @return UserView[]
-     *
-     * @throws CriteriaConverterException
-     */
     #[\Override]
     public function findBy(
         Criteria\AndX|Criteria\OrX|null $criteria = null,
@@ -53,9 +43,6 @@ final readonly class UserReadModelRepository extends AbstractObjectManager imple
         return $this->search($criteria, $sort, $offset, $limit);
     }
 
-    /**
-     * @throws CriteriaConverterException
-     */
     #[\Override]
     public function total(Criteria\AndX|Criteria\OrX|null $criteria = null): int
     {

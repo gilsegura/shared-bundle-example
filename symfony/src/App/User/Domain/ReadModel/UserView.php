@@ -8,17 +8,23 @@ use Shared\Domain\DateTimeImmutable;
 use Shared\Domain\Email;
 use Shared\Domain\HashedPassword;
 use Shared\Domain\Uuid;
-use Shared\ReadModel\SerializableInterfaceReadModelInterface;
+use Shared\ReadModel\SerializableReadModelInterface;
+use Shared\Serializer\SerializableInterface;
 
-final class UserView implements SerializableInterfaceReadModelInterface
+final class UserView implements SerializableReadModelInterface
 {
     private function __construct(
-        public Uuid $id,
-        public Email $email,
-        public HashedPassword $password,
-        public DateTimeImmutable $createdAt,
-        public ?DateTimeImmutable $updatedAt
+        private Uuid $id,
+        private Email $email,
+        private HashedPassword $password,
+        private DateTimeImmutable $createdAt,
+        private ?DateTimeImmutable $updatedAt = null
     ) {
+    }
+
+    public static function fromSerializable(SerializableInterface $serializable): self
+    {
+        return self::deserialize($serializable->serialize());
     }
 
     #[\Override]
@@ -61,5 +67,25 @@ final class UserView implements SerializableInterfaceReadModelInterface
     public function id(): Uuid
     {
         return $this->id;
+    }
+
+    public function email(): Email
+    {
+        return $this->email;
+    }
+
+    public function password(): HashedPassword
+    {
+        return $this->password;
+    }
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 }

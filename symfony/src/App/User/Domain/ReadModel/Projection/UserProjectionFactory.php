@@ -20,7 +20,7 @@ final readonly class UserProjectionFactory extends AbstractProjector
 
     protected function applyUserWasCreated(UserWasCreated $event): void
     {
-        $user = UserView::deserialize($event->serialize());
+        $user = UserView::fromSerializable($event);
 
         $this->userRepository->save($user);
     }

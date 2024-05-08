@@ -20,7 +20,7 @@ final readonly class ChangeUserPasswordHandler implements CommandHandlerInterfac
 
         $user->changePassword(
             $command->oldPlainPassword,
-            $command->plainPassword
+            $command->password
         );
 
         $this->userRepository->store($user);

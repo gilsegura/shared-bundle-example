@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace UI\Http\Rest\Request\Auth;
+namespace UI\Http\Rest\Request;
 
 use Assert\Assertion;
 use SharedBundle\UI\Http\Rest\Request\Input;

@@ -18,7 +18,7 @@ final class Version20240127085341 extends AbstractMigration
                 metadata JSON NOT NULL,
                 payload JSON NOT NULL,
                 recorded_at DATETIME NOT NULL,
-                PRIMARY KEY(id)
+                PRIMARY KEY(id, type, playhead)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
