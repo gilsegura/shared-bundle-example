@@ -1,0 +1,37 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            events:
+                dsn: "%env(resolve:MESSENGER_TRANSPORT_DSN)%"
+                retry_strategy:
+                    delay: 2000
+                    max_retries: 5
+                    multiplier: 2
+                    max_delay: 0
+                options:
+                    exchange:
+                        type: topic
+                        name: events
+                    queues:
+                        events:
+                            binding_keys: [ '#' ]
+
+            failed:
+                dsn: "%env(resolve:MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    queues:
+                        failed:
+                            binding_keys: ['#']
+
+        routing:
+            'Shared\Domain\DomainMessage': events
+
+# when@test:
+#    framework:
+#        messenger:
+#            transports:
+#                # replace with your transport name here (e.g., my_transport: 'in-memory://')
+#                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
+#                async: 'in-memory://'
