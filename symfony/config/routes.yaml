@@ -1,0 +1,4 @@
+json_api_v1_controllers:
+    resource: ../src/UI/Http/JsonApi/Controller/V1
+    type: attribute
+    prefix: /v1

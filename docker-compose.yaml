@@ -1,0 +1,63 @@
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./symfony/public:/var/www/public:ro
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+
+  php-cli:
+    build: docker/php-cli
+    volumes:
+      - ./symfony:/var/www:rw,delegated
+    environment:
+      - XDEBUG_MODE=off
+      - PHP_IDE_CONFIG=serverName=symfony.local
+
+  php-fpm:
+    build: docker/php-fpm
+    volumes:
+      - ./symfony:/var/www:rw,delegated
+    depends_on:
+      - start_dependencies
+    environment:
+      - XDEBUG_MODE=debug
+      - PHP_IDE_CONFIG=serverName=symfony.local
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - ./docker/mysql:/etc/mysql/conf.d:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=api
+      - MYSQL_DATABASE=api
+    command: --default-authentication-plugin=caching_sha2_password
+    tmpfs:
+      - /var/lib/mysql/:rw,noexec,nosuid,size=600m
+      - /tmp/:rw,noexec,nosuid,size=50m
+    ports:
+      - "3306:3306"
+
+  rmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - mysql
+      - rmq
+    command: mysql:3306 rmq:5672
+
+volumes:
+  db_data:
